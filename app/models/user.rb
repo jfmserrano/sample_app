@@ -12,9 +12,9 @@
 class User < ActiveRecord::Base
 
 # crea un atributo virtual que se utilizara para la confirmacion. no se guarda en plano en db
-  attr_accessor :password 
+  attr_accessor :password # autom. cre getter y setter para password
 
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation #permite mass-assignment
   
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -41,6 +41,12 @@ class User < ActiveRecord::Base
     return nil  if user.nil?
     return user if user.has_password?(submitted_password)
   end
+
+
+  def self.authenticate_with_salt(id, cookie_salt)
+    user = find_by_id(id)
+    (user && user.salt == cookie_salt) ? user : nil
+  end  
   
   private
   
