@@ -19,6 +19,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(:page => params[:page])
     @title = @user.name
   end
 
@@ -26,11 +27,6 @@ class UsersController < ApplicationController
     @title = "Edit user"
   end
 
-  def show
-    @user = User.find(params[:id])
-    @title = @user.name
-  end
-  
   def new
     @user = User.new
     @title = "Sign Up"
@@ -64,9 +60,10 @@ class UsersController < ApplicationController
 
   private
 
-    def authenticate
-      deny_access unless signed_in?
-    end
+# authenticate included in sessions_helper
+#    def authenticate
+#      deny_access unless signed_in?
+#    end
     
     def correct_user
       @user = User.find(params[:id])
